@@ -28,7 +28,7 @@ export default function HomeClient({ initialLang }: HomeClientProps) {
       <div className="portfolio">
         <header className="hero section">
           <nav className="top-nav">
-            <p className="brand">NR.dev</p>
+            <p className="brand">nycolazs.dev</p>
             <div className="nav-links">
               <a href="#sobre">{t.navAbout}</a>
               <a href="#experiencia">{t.navExperience}</a>
