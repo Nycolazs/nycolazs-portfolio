@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import "./globals.css";
 
@@ -31,6 +31,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
         {children}
+        <Analytics />
         {GA_ID ? (
           <>
             <Script
