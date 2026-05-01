@@ -1,39 +1,95 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { HOME_CONTENT, FLOATING_ICONS, type Locale } from "./home-content";
+import { useCallback, useEffect, useState } from "react";
+import { HOME_CONTENT, type Locale } from "./home-content";
 
-type Props = { initialLang: Locale; serverYear: string | null };
+type Props = { initialLang: Locale; serverYear: string };
+
+const REVEAL_SELECTOR = ".reveal-on-scroll";
 
 export default function HomeClient({ initialLang, serverYear }: Props) {
   const [lang, setLang] = useState<Locale>(initialLang);
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [languageSwitching, setLanguageSwitching] = useState(false);
   const t = HOME_CONTENT[lang];
-  const footerYear = serverYear ?? "—";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let ticking = false;
+    let frameId = 0;
+
+    const updateNavState = () => {
+      ticking = false;
+      setScrolled((current) => {
+        const next = window.scrollY > 40;
+        return current === next ? current : next;
+      });
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        frameId = requestAnimationFrame(updateNavState);
+      }
+    };
+
+    updateNavState();
     window.addEventListener("scroll", onScroll, { passive: true });
-    const raf = requestAnimationFrame(() => setMounted(true));
+
+    const revealItems = document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR);
+
+    if (!("IntersectionObserver" in window)) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        cancelAnimationFrame(frameId);
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+
     return () => {
       window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
     };
   }, []);
 
+  const changeLanguage = useCallback(
+    (nextLang: Locale) => {
+      if (nextLang === lang || languageSwitching) {
+        return;
+      }
+
+      setLanguageSwitching(true);
+      window.setTimeout(() => setLang(nextLang), 130);
+      window.setTimeout(() => setLanguageSwitching(false), 400);
+    },
+    [lang, languageSwitching]
+  );
+
   return (
-    <div className={`site-shell${mounted ? " site-entered" : ""}`}>
+    <div className="site-shell">
       <div className="floating-bg" aria-hidden="true">
-        {FLOATING_ICONS.map((icon, i) => (
-          <span
-            key={`${icon.symbol}-${i}`}
-            className={`float-icon ${icon.className}`}
-          >
-            {icon.symbol}
-          </span>
-        ))}
+        <span className="bg-orbit bg-orbit-1" />
+        <span className="bg-orbit bg-orbit-2" />
+        <span className="bg-orbit bg-orbit-3" />
+        <span className="bg-mote bg-mote-1" />
+        <span className="bg-mote bg-mote-2" />
+        <span className="bg-mote bg-mote-3" />
+        <span className="bg-mote bg-mote-4" />
       </div>
 
       <nav className={`main-nav${scrolled ? " scrolled" : ""}`}>
@@ -55,14 +111,16 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
               <button
                 type="button"
                 className={`lang-btn${lang === "pt" ? " active" : ""}`}
-                onClick={() => setLang("pt")}
+                onClick={() => changeLanguage("pt")}
+                disabled={languageSwitching}
               >
                 PT
               </button>
               <button
                 type="button"
                 className={`lang-btn${lang === "en" ? " active" : ""}`}
-                onClick={() => setLang("en")}
+                onClick={() => changeLanguage("en")}
+                disabled={languageSwitching}
               >
                 EN
               </button>
@@ -71,8 +129,10 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
         </div>
       </nav>
 
-      <div className="portfolio">
-        <header className="hero section">
+      <div
+        className={`portfolio${languageSwitching ? " language-switching" : ""}`}
+      >
+        <header className="hero section reveal-on-scroll">
           <div className="terminal-line">
             <span className="prompt">{t.terminalUser}</span>
             <span className="command">{t.terminalCommand}</span>
@@ -146,8 +206,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
         </header>
 
         <main>
-
-          <section id="sobre" className="section">
+          <section id="sobre" className="section reveal-on-scroll">
             <div className="section-header">
               <span className="section-tag">{t.sectionTagAbout}</span>
               <h2>{t.aboutTitle}</h2>
@@ -164,7 +223,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section id="experiencia" className="section">
+          <section id="experiencia" className="section reveal-on-scroll">
             <div className="section-header">
               <span className="section-tag">{t.sectionTagExp}</span>
               <h2>{t.expTitle}</h2>
@@ -198,7 +257,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section id="skills" className="section">
+          <section id="skills" className="section reveal-on-scroll">
             <div className="section-header">
               <span className="section-tag">{t.sectionTagSkills}</span>
               <h2>{t.skillsTitle}</h2>
@@ -222,7 +281,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section id="projetos" className="section">
+          <section id="projetos" className="section reveal-on-scroll">
             <div className="section-header">
               <span className="section-tag">{t.sectionTagProjects}</span>
               <h2>{t.projectsTitle}</h2>
@@ -247,7 +306,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section className="section games-section">
+          <section className="section games-section reveal-on-scroll">
             <div className="section-header">
               <span className="section-tag">{t.sectionTagGames}</span>
               <h2>{t.gamesTitle}</h2>
@@ -274,7 +333,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section className="section grid-2">
+          <section className="section grid-2 reveal-on-scroll">
             <div className="card">
               <div className="section-header">
                 <span className="section-tag">{t.sectionTagEdu}</span>
@@ -305,7 +364,10 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
             </div>
           </section>
 
-          <section id="contato" className="section card contact-section">
+          <section
+            id="contato"
+            className="section card contact-section reveal-on-scroll"
+          >
             <div className="section-header center">
               <span className="section-tag">{t.sectionTagContact}</span>
               <h2>{t.contactTitle}</h2>
@@ -343,7 +405,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
         </main>
 
         <footer className="footer section">
-          <p>{t.footerText.replace("{year}", footerYear)}</p>
+          <p>{t.footerText.replace("{year}", serverYear)}</p>
           <p className="footer-quote">{t.footerQuote}</p>
         </footer>
       </div>

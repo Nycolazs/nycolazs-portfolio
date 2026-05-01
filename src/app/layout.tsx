@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import Script from "next/script";
+import GoogleAnalytics from "./GoogleAnalytics";
 import "./globals.css";
+
+const siteUrl = new URL("https://nycolazs.vercel.app");
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -16,11 +18,33 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: "Nycolas Rocha | Fullstack Software Developer",
-  description: "Portfolio pessoal de Nycolas Rocha",
+  description:
+    "Portfolio profissional de Nycolas Rocha, desenvolvedor fullstack especializado em Node.js, TypeScript, Java, React e Next.js.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Nycolas Rocha | Fullstack Software Developer",
+    description:
+      "Portfolio profissional de Nycolas Rocha, desenvolvedor fullstack especializado em Node.js, TypeScript, Java, React e Next.js.",
+    url: siteUrl,
+    siteName: "nycolazs.dev",
+    type: "website",
+    locale: "pt_BR",
+  },
+  twitter: {
+    card: "summary",
+    title: "Nycolas Rocha | Fullstack Software Developer",
+    description:
+      "Portfolio profissional de Nycolas Rocha, desenvolvedor fullstack especializado em Node.js, TypeScript, Java, React e Next.js.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
-
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default function RootLayout({
   children,
@@ -32,23 +56,7 @@ export default function RootLayout({
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
         {children}
         <Analytics />
-        {GA_ID ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga4-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                window.gtag = gtag;
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}');
-              `}
-            </Script>
-          </>
-        ) : null}
+        <GoogleAnalytics />
       </body>
     </html>
   );

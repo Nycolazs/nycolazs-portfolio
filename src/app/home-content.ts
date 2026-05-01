@@ -1,10 +1,5 @@
 export type Locale = "pt" | "en";
 
-export type FloatingIcon = {
-  symbol: string;
-  className: string;
-};
-
 export type ExperienceItem = {
   period: string;
   role: string;
@@ -25,11 +20,6 @@ export type ProjectItem = {
   description: string;
   url: string;
   icon: string;
-};
-
-export type HighlightItem = {
-  value: string;
-  label: string;
 };
 
 export type GameReference = {
@@ -106,21 +96,6 @@ export type HomeContent = {
   footerText: string;
   footerQuote: string;
 };
-
-export const FLOATING_ICONS: FloatingIcon[] = [
-  { symbol: "🗡️", className: "f1" },
-  { symbol: "⚡", className: "f2" },
-  { symbol: "⛏️", className: "f3" },
-  { symbol: "💎", className: "f4" },
-  { symbol: "🔮", className: "f5" },
-  { symbol: "🏰", className: "f6" },
-  { symbol: "❤️", className: "f7" },
-  { symbol: "⭐", className: "f8" },
-  { symbol: "🎮", className: "f9" },
-  { symbol: "🐉", className: "f10" },
-  { symbol: "🧱", className: "f11" },
-  { symbol: "🦇", className: "f12" },
-];
 
 export const HOME_CONTENT: Record<Locale, HomeContent> = {
   pt: {
