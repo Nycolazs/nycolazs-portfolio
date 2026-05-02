@@ -86,6 +86,8 @@ a {
 
 .section {
   margin-bottom: 28px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
 /* ---- Animated Background ---- */
@@ -98,30 +100,15 @@ a {
   z-index: 0;
 }
 
-.floating-bg::before,
-.floating-bg::after {
+.floating-bg::before {
   content: "";
   position: absolute;
   inset: -20%;
-}
-
-.floating-bg::before {
   background:
     radial-gradient(circle at 18% 28%, rgba(102, 242, 165, 0.08), transparent 36%),
     radial-gradient(circle at 74% 18%, rgba(142, 231, 255, 0.07), transparent 32%),
     radial-gradient(circle at 62% 84%, rgba(212, 93, 121, 0.06), transparent 34%);
   animation: auroraDrift 24s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-.floating-bg::after {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
-  opacity: 0.42;
-  animation: gridFloat 18s linear infinite;
 }
 
 .bg-orbit,
@@ -135,9 +122,7 @@ a {
   height: var(--size);
   border: 1px solid color-mix(in srgb, var(--color) 22%, transparent);
   border-radius: 50%;
-  box-shadow: 0 0 48px color-mix(in srgb, var(--color) 8%, transparent);
   animation: orbitPulse var(--duration) ease-in-out infinite alternate;
-  will-change: transform, opacity;
 }
 
 .bg-orbit-1 {
@@ -156,14 +141,6 @@ a {
   top: 8vh;
 }
 
-.bg-orbit-3 {
-  --size: 420px;
-  --color: var(--gold);
-  --duration: 26s;
-  left: 46%;
-  bottom: -170px;
-}
-
 .bg-mote {
   width: var(--size);
   height: var(--size);
@@ -173,13 +150,10 @@ a {
   opacity: 0.28;
   transform: rotate(45deg);
   animation: moteFloat var(--duration) ease-in-out infinite;
-  will-change: transform;
 }
 
 .bg-mote-1 { --size: 22px; --color: var(--accent); --duration: 12s; left: 14%; top: 24%; }
 .bg-mote-2 { --size: 34px; --color: var(--gold); --duration: 16s; left: 82%; top: 38%; animation-delay: -4s; }
-.bg-mote-3 { --size: 18px; --color: var(--accent-2); --duration: 14s; left: 70%; top: 76%; animation-delay: -7s; }
-.bg-mote-4 { --size: 26px; --color: var(--wine); --duration: 18s; left: 8%; top: 72%; animation-delay: -9s; }
 
 .reveal-on-scroll {
   opacity: 0;
@@ -187,7 +161,6 @@ a {
   transition:
     opacity 0.6s ease,
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
 }
 
 .reveal-on-scroll.is-visible {
@@ -195,58 +168,27 @@ a {
   transform: translateY(0);
 }
 
-.reveal-on-scroll .inventory-grid > *,
-.reveal-on-scroll .achievements-grid > *,
-.reveal-on-scroll .games-grid > *,
-.reveal-on-scroll .quest-timeline > *,
+.reveal-on-scroll :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > *,
 .reveal-on-scroll.grid-2 > * {
   opacity: 0;
   transform: translateY(14px);
 }
 
-.reveal-on-scroll.is-visible .inventory-grid > *,
-.reveal-on-scroll.is-visible .achievements-grid > *,
-.reveal-on-scroll.is-visible .games-grid > *,
-.reveal-on-scroll.is-visible .quest-timeline > *,
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > *,
 .reveal-on-scroll.is-visible.grid-2 > * {
   animation: childSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.reveal-on-scroll.is-visible .inventory-grid > :nth-child(2),
-.reveal-on-scroll.is-visible .achievements-grid > :nth-child(2),
-.reveal-on-scroll.is-visible .games-grid > :nth-child(2),
-.reveal-on-scroll.is-visible .quest-timeline > :nth-child(2),
-.reveal-on-scroll.is-visible.grid-2 > :nth-child(2) {
-  animation-delay: 0.07s;
-}
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > :nth-child(2),
+.reveal-on-scroll.is-visible.grid-2 > :nth-child(2) { animation-delay: 0.07s; }
 
-.reveal-on-scroll.is-visible .inventory-grid > :nth-child(3),
-.reveal-on-scroll.is-visible .achievements-grid > :nth-child(3),
-.reveal-on-scroll.is-visible .games-grid > :nth-child(3),
-.reveal-on-scroll.is-visible .quest-timeline > :nth-child(3) {
-  animation-delay: 0.14s;
-}
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > :nth-child(3) { animation-delay: 0.14s; }
 
-.reveal-on-scroll.is-visible .inventory-grid > :nth-child(4),
-.reveal-on-scroll.is-visible .achievements-grid > :nth-child(4),
-.reveal-on-scroll.is-visible .games-grid > :nth-child(4),
-.reveal-on-scroll.is-visible .quest-timeline > :nth-child(4) {
-  animation-delay: 0.21s;
-}
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > :nth-child(4) { animation-delay: 0.21s; }
 
-.reveal-on-scroll.is-visible .inventory-grid > :nth-child(5),
-.reveal-on-scroll.is-visible .achievements-grid > :nth-child(5),
-.reveal-on-scroll.is-visible .games-grid > :nth-child(5),
-.reveal-on-scroll.is-visible .quest-timeline > :nth-child(5) {
-  animation-delay: 0.28s;
-}
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > :nth-child(5) { animation-delay: 0.28s; }
 
-.reveal-on-scroll.is-visible .inventory-grid > :nth-child(6),
-.reveal-on-scroll.is-visible .achievements-grid > :nth-child(6),
-.reveal-on-scroll.is-visible .games-grid > :nth-child(6),
-.reveal-on-scroll.is-visible .quest-timeline > :nth-child(6) {
-  animation-delay: 0.35s;
-}
+.reveal-on-scroll.is-visible :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > :nth-child(6) { animation-delay: 0.35s; }
 
 .language-switching {
   animation: languageSwap 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -259,9 +201,9 @@ a {
   top: 0;
   z-index: 100;
   width: 100%;
-  background: rgba(12, 11, 18, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(12, 11, 18, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s, background 0.3s;
 }
@@ -393,12 +335,8 @@ a {
 .hero {
   border: 1px solid var(--border);
   border-radius: 8px;
-  background:
-    linear-gradient(160deg, rgba(32, 29, 47, 0.95), rgba(13, 12, 19, 0.92)),
-    linear-gradient(90deg, transparent 0 48%, rgba(102, 242, 165, 0.05) 48% 52%, transparent 52%);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(160deg, rgba(32, 29, 47, 0.97), rgba(13, 12, 19, 0.95));
   padding: 28px;
-  box-shadow: 0 24px 90px #03020780, inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .terminal-line {
@@ -787,30 +725,9 @@ h3 {
   gap: 14px;
 }
 
-.inventory-slot {
-  position: relative;
-  overflow: hidden;
-}
-
-.inventory-slot::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.inventory-slot:hover::before {
-  opacity: 1;
-}
-
 .inventory-slot:hover {
-  box-shadow: 0 8px 30px rgba(102, 242, 165, 0.08);
   transform: translateY(-2px);
+  border-color: var(--accent);
 }
 
 .slot-header {
@@ -903,34 +820,13 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    rgba(25, 23, 35, 0.9);
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-}
-
-.game-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 18px 18px;
-  mask-image: linear-gradient(180deg, black, transparent 70%);
-  opacity: 0.5;
-  pointer-events: none;
+  background: rgba(25, 23, 35, 0.9);
+  transition: transform 0.25s, border-color 0.25s;
 }
 
 .game-card:hover {
   transform: translateY(-3px);
   border-color: var(--game-color);
-  box-shadow: 0 18px 42px color-mix(in srgb, var(--game-color) 14%, transparent);
-}
-
-.game-card > * {
-  position: relative;
-  z-index: 1;
 }
 
 .game-orb {
@@ -941,13 +837,8 @@ h3 {
   border: 1px solid color-mix(in srgb, var(--game-color) 70%, white 5%);
   border-radius: 14px;
   background:
-    radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--game-color) 24%, white 12%), transparent 34%),
     linear-gradient(135deg, color-mix(in srgb, var(--game-color) 24%, transparent), rgba(255, 255, 255, 0.03) 62%),
     rgba(5, 4, 9, 0.55);
-  box-shadow:
-    0 0 28px color-mix(in srgb, var(--game-color) 24%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -12px 28px rgba(0, 0, 0, 0.18);
   margin-bottom: 24px;
   color: var(--game-color);
 }
@@ -957,9 +848,6 @@ h3 {
   width: 44px;
   height: 44px;
   object-fit: contain;
-  filter:
-    drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45))
-    drop-shadow(0 0 10px color-mix(in srgb, var(--game-color) 36%, transparent));
 }
 
 .pokemon .game-orb img {
@@ -1123,11 +1011,6 @@ h3 {
   to { transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.06); }
 }
 
-@keyframes gridFloat {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(54px, 54px, 0); }
-}
-
 @keyframes orbitPulse {
   from {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(0.96);
@@ -1189,10 +1072,6 @@ h3 {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 @keyframes bounceGlow {
@@ -1277,10 +1156,7 @@ h3 {
     transition: none;
   }
 
-  .reveal-on-scroll .inventory-grid > *,
-  .reveal-on-scroll .achievements-grid > *,
-  .reveal-on-scroll .games-grid > *,
-  .reveal-on-scroll .quest-timeline > *,
+  .reveal-on-scroll :is(.inventory-grid, .achievements-grid, .games-grid, .quest-timeline) > *,
   .reveal-on-scroll.grid-2 > * {
     opacity: 1;
     transform: none;
@@ -1288,7 +1164,6 @@ h3 {
   }
 
   .floating-bg::before,
-  .floating-bg::after,
   .bg-orbit,
   .bg-mote,
   .language-switching,
@@ -1403,7 +1278,7 @@ h3 {
   }
 
   .section {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .section-header {
@@ -1415,19 +1290,10 @@ h3 {
     letter-spacing: 0.8px;
   }
 
-  .section {
-    margin-bottom: 18px;
-  }
-
   .hero {
     border-radius: 8px;
     padding: 16px;
     background: rgba(16, 14, 23, 0.9);
-    box-shadow: none;
-  }
-
-  .terminal-line {
-    font-size: 0.76rem;
   }
 
   .terminal-line {
@@ -1461,12 +1327,8 @@ h3 {
 
   .player-card {
     order: 2;
-  }
-
-  .player-card {
     gap: 12px;
     background: rgba(20, 18, 28, 0.85);
-    box-shadow: none;
   }
 
   .cta-row {
@@ -1520,12 +1382,6 @@ h3 {
     display: none;
   }
 
-  .player-card {
-    flex-direction: column;
-    padding: 18px;
-    width: 100%;
-  }
-
   .player-avatar {
     width: 80px;
     height: 80px;
@@ -1535,7 +1391,6 @@ h3 {
     border-radius: 8px;
     padding: 16px;
     background: rgba(18, 16, 26, 0.85);
-    box-shadow: none;
   }
 
   .card h3 {
@@ -1565,12 +1420,8 @@ h3 {
 
   .game-card {
     min-height: 180px;
-  }
-
-  .game-card {
     padding: 16px;
     background: rgba(18, 16, 26, 0.85);
-    box-shadow: none;
   }
 
   .game-card p {
@@ -1626,9 +1477,6 @@ h3 {
 
   .cta-row .btn {
     font-size: 0.88rem;
-  }
-
-  .cta-row .btn {
     min-height: 44px;
   }
 

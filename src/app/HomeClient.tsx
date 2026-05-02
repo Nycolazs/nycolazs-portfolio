@@ -85,11 +85,8 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
       <div className="floating-bg" aria-hidden="true">
         <span className="bg-orbit bg-orbit-1" />
         <span className="bg-orbit bg-orbit-2" />
-        <span className="bg-orbit bg-orbit-3" />
         <span className="bg-mote bg-mote-1" />
         <span className="bg-mote bg-mote-2" />
-        <span className="bg-mote bg-mote-3" />
-        <span className="bg-mote bg-mote-4" />
       </div>
 
       <nav className={`main-nav${scrolled ? " scrolled" : ""}`}>
@@ -324,6 +321,7 @@ export default function HomeClient({ initialLang, serverYear }: Props) {
                       alt={game.title}
                       width={56}
                       height={56}
+                      loading="lazy"
                     />
                   </div>
                   <h3>{game.subtitle}</h3>
